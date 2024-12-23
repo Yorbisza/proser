@@ -13,8 +13,11 @@ class ContrasenasController extends Controller
      */
     public function index()
     {
-        $serve['contrasenas']=contrasenas::paginate(5);
-        return view('contrasenas.show', $serve); // Devuelve la lista de servidores como JSON
+      //  $serve['contrasenas']=contrasenas::paginate(5);
+        //return view('contrasenas.show', $serve); // Devuelve la lista de servidores como JSON
+
+        $contrasenas = contrasenas::paginate(5);
+        return view('modules/contrasenas/index', compact('contrasenas'));
     }
 
     /**
@@ -22,8 +25,10 @@ class ContrasenasController extends Controller
      */
     public function create()
     {
+
         $serve = servidores::all(); // Obtener todos los servidores
-        return view('contrasenas.create', compact('serve')); // Pasar la variable a la vista
+     // Pasar la variable a la vista
+        return view('modules/contrasenas/create', compact('serve'));
     }
 
     /**
@@ -36,6 +41,8 @@ class ContrasenasController extends Controller
             'nombre_usuario' => 'required|string|max:255',
             'password' => 'required|string|min:6', // Ajusta la regla según tus necesidades
             'serve_id' => 'required',
+        ],[
+            'password|min6' => 'La contraseña de'
         ]);
 
         // Crear y guardar la nueva contraseña
@@ -53,15 +60,27 @@ class ContrasenasController extends Controller
      */
     public function show(string $id)
     {
-        // Aquí puedes retornar una vista o JSON del recurso específico
+         // password_hash(string $password, integer $algo, array $options = ?): string
+         
+        $contrasenas = contrasenas::find($id);
+
+    // Verificar si el servidor fue encontrado
+    if (!$contrasenas) {
+        return redirect()->route('contrasenas.index')->with('error', 'Contraseña no encontrado.');
     }
+
+    return view('modules/contrasenas/show', compact('contrasenas'));
+}
+
 
     /**
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
     {
-        // Aquí puedes retornar una vista para editar la contraseña
+        $contrasenas = contrasenas::find($id);
+        $serve = servidores::all();
+      return view('modules/contrasenas/edit', compact('contrasenas', 'serve'));
     }
 
     /**
@@ -69,7 +88,12 @@ class ContrasenasController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        // Aquí puedes manejar la actualización del recurso
+        $contrasenas = contrasenas::find($id);
+        $contrasenas->nombre_usuario = $request->nombre_usuario;
+        $contrasenas->password = $request->password;
+        $contrasenas->serve_id = $request->serve_id;
+        $contrasenas->save();
+        return to_route('contrasenas.index');
     }
 
     /**
@@ -77,6 +101,8 @@ class ContrasenasController extends Controller
      */
     public function destroy(string $id)
     {
-        // Aquí puedes manejar la eliminación del recurso
+        contrasenas::destroy($id);
+        return redirect()->route('contrasenas.index')->with('success', 'Contraseña eliminada correctamente.');
+
     }
 }
