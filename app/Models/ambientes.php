@@ -1,22 +1,20 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class servidores extends Model
+class ambientes extends Model
 {
     use HasFactory;
     protected $connection = 'serve-yor';
 
-    protected $table = 'proser.servidores';
+    protected $table = 'proser.ambientes';
 
     protected $fillable = [
 
-        'nombre_servidores',
-        'ip_servidores',
-        'puerto',
-        'ambiente_id',
-        'status_id',
+        'nombre',
+
     ];
 }

@@ -13,6 +13,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(AmbientesTableSeeder::class);
+        $this->call(StatusTableSeeder::class);
+
         // User::factory(10)->create();
 
         User::factory()->create([

@@ -13,9 +13,10 @@ class contrasenas extends Model
 
     protected $fillable = [
 
+        'serve_id',
         'nombre_usuario',
         'password',
-        'server_id',
+
 
     ];
 }
